@@ -1,4 +1,4 @@
-import axios, { AxiosError, isAxiosError } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, isAxiosError } from 'axios';
 import { Cookie } from 'cookiejar';
 import { JSDOM } from 'jsdom';
 import { ClientTransaction } from 'x-client-transaction-id-glacier';
@@ -364,5 +364,45 @@ export class FetcherService {
 
 		/** If request not successful even after retries, throw the error */
 		throw error;
+	}
+
+	public async getAxiosRequestString(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<string> {
+		args = this._validateArgs(resource, args)!
+
+		// Getting credentials from key
+		const cred: AuthCredential = await this._getCredential()
+
+		// Getting request configuration
+		const config = Requests[resource](args)
+
+		// Setting additional request parameters
+		config.headers = {
+			...config.headers,
+			...cred.toHeader(),
+			...this.config.headers,
+		}
+
+		config.httpAgent = this.config.httpsAgent
+		config.httpsAgent = this.config.httpsAgent
+		config.timeout = this._timeout
+
+		config.headers = {
+			...(await this._getTransactionHeader(config.method ?? '', config.url ?? '')),
+			...config.headers,
+		}
+
+		return axios.getUri(config)
+	}
+
+	public async getAxiosQueryString(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<string> {
+		const req = await this.getAxiosRequestString(resource, args)
+
+		return req.split('?')[1]
+	}
+
+	public async getAxiosQueryLength(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<number> {
+		const queries =  await this.getAxiosQueryString(resource, args)
+
+		return queries.length
 	}
 }

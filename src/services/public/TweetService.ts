@@ -581,6 +581,42 @@ export class TweetService extends FetcherService {
 		return data;
 	}
 
+	public async getSearchAxiosRequest(filter: ITweetFilter, count?: number, cursor?: string): Promise<string> {
+		const resource = ResourceType.TWEET_SEARCH
+
+		const response = await this.getAxiosRequestString(resource, {
+			filter: filter,
+			count: count,
+			cursor: cursor,
+		});
+
+		return response;
+	}
+
+	public async getSearchAxiosQueryString(filter: ITweetFilter, count?: number, cursor?: string): Promise<string> {
+		const resource = ResourceType.TWEET_SEARCH
+
+		const response = await this.getAxiosQueryString(resource, {
+			filter: filter,
+			count: count,
+			cursor: cursor,
+		});
+
+		return response;
+	}
+
+	public async getSearchAxiosQueryLength(filter: ITweetFilter, count?: number, cursor?: string): Promise<number> {
+		const resource = ResourceType.TWEET_SEARCH
+
+		const response = await this.getAxiosQueryLength(resource, {
+			filter: filter,
+			count: count,
+			cursor: cursor,
+		});
+
+		return response;
+	}
+
 	/**
 	 * Stream tweets in pseudo real-time using a filter.
 	 *
