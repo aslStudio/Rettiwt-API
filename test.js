@@ -15,12 +15,11 @@ async function main() {
 
 		const filtersBack = {
 			fromUsers: [
-				'durov',
-				'BBCWorld123123123123123123123123213213213123123123213213123213123123123123123123213',
+				'Iwantsleepnowjobletm',
 			],
-			startDate: new Date('2025-11-23T17:50:00Z'),
-			endDate: new Date('2025-11-23T18:00:00Z'),
-			onlyOriginal: true
+			startDate: new Date('2007-06-01T00:00:00Z'),
+			endDate: new Date('2025-06-03T00:00:00Z'),
+			onlyOriginal: false
 		}
 
 		const result = await client.tweet.search(filtersBack);
